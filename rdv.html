@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prise de Rendez-vous - Ramonage</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #4a6741 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .step {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .step h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        .zone-info {
+            background: #e8f5e8;
+            border: 2px solid #4CAF50;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .zone-info.not-covered {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .day-slot {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .day-slot.available {
+            border-color: #4CAF50;
+            cursor: pointer;
+        }
+
+        .day-slot.available:hover {
+            background: #e8f5e8;
+            transform: translateY(-2px);
+        }
+
+        .day-slot.selected {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .day-slot.unavailable {
+            background: #f5f5f5;
+            color: #999;
+            border-color: #ccc;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .time-slot {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .time-slot:hover {
+            background: #e8f5e8;
+            border-color: #4CAF50;
+        }
+
+        .time-slot.selected {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .map-container {
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+            border: 2px solid #ddd;
+        }
+
+        .distance-info {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .distance-info.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .distance-info.error {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+
+        .autocomplete-container {
+            position: relative;
+        }
+
+        .pac-container {
+            z-index: 1000;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Prise de Rendez-vous</h1>
+            <p>Ramonage professionnel - Service rapide et efficace</p>
+        </div>
+
+        <div class="content">
+            <!-- Étape 1: Adresse -->
+            <div class="step" id="step1">
+                <h3>📍 Étape 1 : Votre adresse</h3>
+                <div class="form-group">
+                    <label for="address">Adresse complète :</label>
+                    <div class="autocomplete-container">
+                        <input type="text" id="address" placeholder="Commencez à taper votre adresse...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="postalCode">Code postal :</label>
+                    <input type="text" id="postalCode" placeholder="Ex: 59500" maxlength="5" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="city">Ville :</label>
+                    <input type="text" id="city" placeholder="Ex: Douai" readonly>
+                </div>
+                <div id="map" class="map-container" style="display: none;"></div>
+                <button class="btn" onclick="checkZone()" id="checkZoneBtn" disabled>Vérifier la zone de couverture</button>
+                <div id="zoneResult"></div>
+            </div>
+
+            <!-- Étape 2: Calendrier -->
+            <div class="step hidden" id="step2">
+                <h3>📅 Étape 2 : Choisissez votre date</h3>
+                <div id="calendar"></div>
+            </div>
+
+            <!-- Étape 3: Créneaux horaires -->
+            <div class="step hidden" id="step3">
+                <h3>⏰ Étape 3 : Choisissez votre horaire</h3>
+                <div id="timeSlots"></div>
+            </div>
+
+            <!-- Étape 4: Informations client -->
+            <div class="step hidden" id="step4">
+                <h3>👤 Étape 4 : Vos informations</h3>
+                <div class="form-group">
+                    <label for="clientName">Nom complet :</label>
+                    <input type="text" id="clientName" placeholder="Votre nom et prénom">
+                </div>
+                <div class="form-group">
+                    <label for="clientPhone">Téléphone :</label>
+                    <input type="tel" id="clientPhone" placeholder="06 12 34 56 78">
+                </div>
+                <div class="form-group">
+                    <label for="clientEmail">Email :</label>
+                    <input type="email" id="clientEmail" placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="chimney">Type de cheminée :</label>
+                    <select id="chimney">
+                        <option value="">Sélectionnez...</option>
+                        <option value="insert">Insert</option>
+                        <option value="foyer-ouvert">Foyer ouvert</option>
+                        <option value="poele-bois">Poêle à bois</option>
+                        <option value="poele-granules">Poêle à granulés</option>
+                        <option value="chaudiere">Chaudière</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Informations complémentaires :</label>
+                    <textarea id="notes" rows="3" placeholder="Accès difficile, animaux, etc."></textarea>
+                </div>
+                <button class="btn" onclick="showSummary()">Finaliser la réservation</button>
+            </div>
+
+            <!-- Résumé -->
+            <div class="step hidden" id="step5">
+                <h3>📋 Résumé de votre rendez-vous</h3>
+                <div class="summary" id="summary"></div>
+                <button class="btn" onclick="confirmBooking()">Confirmer le rendez-vous</button>
+            </div>
+
+            <!-- Confirmation -->
+            <div class="hidden" id="confirmation">
+                <div class="success">
+                    <h2>✅ Rendez-vous confirmé !</h2>
+                    <p>Vous recevrez un SMS de confirmation et un rappel 24h avant votre rendez-vous.</p>
+                    <p><strong>Numéro de réservation : #RDV-2024-001</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration des zones de couverture avec coordonnées
+        const zones = {
+            '59500': { name: 'Douai', days: ['lundi', 'mardi'], available: true, coords: [50.3669, 3.0803] },
+            '59400': { name: 'Cambrai', days: ['mercredi', 'jeudi'], available: true, coords: [50.1750, 3.2361] },
+            '59300': { name: 'Valenciennes', days: ['vendredi'], available: true, coords: [50.3592, 3.5236] },
+            '62000': { name: 'Arras', days: ['samedi'], available: true, coords: [50.2919, 2.7819] },
+            '59000': { name: 'Lille', days: [], available: false, coords: [50.6292, 3.0573] }
+        };
+
+        // Simulation des rendez-vous déjà pris
+        let existingAppointments = {
+            '2024-07-22': {
+                '08:00': { 
+                    address: '123 Rue de la Paix, 59500 Douai', 
+                    coords: [50.3669, 3.0803],
+                    client: 'M. Dupont'
+                },
+                '09:00': { 
+                    address: '456 Avenue du Général, 59500 Douai', 
+                    coords: [50.3700, 3.0850],
+                    client: 'Mme Martin'
+                }
+            },
+            '2024-07-23': {
+                '08:00': { 
+                    address: '789 Rue du Commerce, 59400 Cambrai', 
+                    coords: [50.1750, 3.2361],
+                    client: 'M. Bernard'
+                }
+            }
+        };
+
+        let selectedZone = null;
+        let selectedDate = null;
+        let selectedTime = null;
+        let clientCoords = null;
+        let map = null;
+        let directionsService = null;
+        let directionsRenderer = null;
+        let autocomplete = null;
+        let marker = null;
+
+        // Initialiser Google Maps
+        function initializeMap() {
+            if (typeof google === 'undefined') {
+                console.warn('Google Maps API non chargée - fonctionnalité désactivée');
+                return;
+            }
+
+            // Initialiser l'autocomplétion
+            const addressInput = document.getElementById('address');
+            autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                types: ['address'],
+                componentRestrictions: { country: 'fr' }
+            });
+
+            autocomplete.addListener('place_changed', onPlaceChanged);
+
+            // Initialiser les services de direction
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+        }
+
+        function onPlaceChanged() {
+            const place = autocomplete.getPlace();
+            
+            if (!place.geometry) {
+                alert('Adresse non trouvée. Veuillez sélectionner une adresse dans la liste.');
+                return;
+            }
+
+            // Extraire les informations
+            const location = place.geometry.location;
+            clientCoords = [location.lat(), location.lng()];
+            
+            // Remplir automatiquement les champs
+            let postalCode = '';
+            let city = '';
+            
+            place.address_components.forEach(component => {
+                const types = component.types;
+                if (types.includes('postal_code')) {
+                    postalCode = component.long_name;
+                } else if (types.includes('locality')) {
+                    city = component.long_name;
+                }
+            });
+
+            document.getElementById('postalCode').value = postalCode;
+            document.getElementById('city').value = city;
+            document.getElementById('address').value = place.formatted_address;
+
+            // Activer le bouton
+            document.getElementById('checkZoneBtn').disabled = false;
+
+            // Afficher la carte
+            showMap();
+        }
+
+        function showMap() {
+            const mapContainer = document.getElementById('map');
+            mapContainer.style.display = 'block';
+
+            map = new google.maps.Map(mapContainer, {
+                zoom: 13,
+                center: { lat: clientCoords[0], lng: clientCoords[1] }
+            });
+
+            // Ajouter un marqueur pour l'adresse client
+            marker = new google.maps.Marker({
+                position: { lat: clientCoords[0], lng: clientCoords[1] },
+                map: map,
+                title: 'Votre adresse',
+                icon: {
+                    url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+                }
+            });
+
+            directionsRenderer.setMap(map);
+        }
+
+        // Fonction pour calculer la distance routière précise
+        function calculateRoadDistance(origin, destination) {
+            return new Promise((resolve) => {
+                if (!directionsService) {
+                    // Fallback vers le calcul à vol d'oiseau
+                    const distance = calculateDistance(origin[0], origin[1], destination[0], destination[1]);
+                    resolve(distance);
+                    return;
+                }
+
+                directionsService.route({
+                    origin: new google.maps.LatLng(origin[0], origin[1]),
+                    destination: new google.maps.LatLng(destination[0], destination[1]),
+                    travelMode: google.maps.TravelMode.DRIVING
+                }, (response, status) => {
+                    if (status === 'OK') {
+                        const distance = response.routes[0].legs[0].distance.value / 1000; // en km
+                        resolve(distance);
+                    } else {
+                        // Fallback
+                        const distance = calculateDistance(origin[0], origin[1], destination[0], destination[1]);
+                        resolve(distance);
+                    }
+                });
+            });
+        }
+
+        // Fonction pour afficher l'itinéraire sur la carte
+        function showRoute(existingAppointments) {
+            if (!map || !directionsRenderer) return;
+
+            const waypoints = [];
+            for (let time in existingAppointments) {
+                const appointment = existingAppointments[time];
+                waypoints.push({
+                    location: new google.maps.LatLng(appointment.coords[0], appointment.coords[1]),
+                    stopover: true
+                });
+            }
+
+            if (waypoints.length > 0) {
+                directionsService.route({
+                    origin: waypoints[0].location,
+                    destination: new google.maps.LatLng(clientCoords[0], clientCoords[1]),
+                    waypoints: waypoints.slice(1),
+                    optimizeWaypoints: true,
+                    travelMode: google.maps.TravelMode.DRIVING
+                }, (response, status) => {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(response);
+                    }
+                });
+            }
+        }
+
+        // Initialiser au chargement de la page
+        window.onload = function() {
+            initializeMap();
+        };
+
+        // Fonction pour calculer la distance entre deux points (en km)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Rayon de la Terre en km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Fonction pour géolocaliser une adresse (version simplifiée)
+        function getCoordinatesFromAddress(address, postalCode) {
+            // Dans un vrai système, vous utiliseriez une API comme Google Maps
+            // Ici on simule avec les coordonnées du centre de chaque zone
+            const zone = zones[postalCode];
+            if (zone) {
+                // Ajouter une petite variation aléatoire pour simuler des adresses différentes
+                const variation = 0.01; // ~1km de variation
+                return [
+                    zone.coords[0] + (Math.random() - 0.5) * variation,
+                    zone.coords[1] + (Math.random() - 0.5) * variation
+                ];
+            }
+            return null;
+        }
+
+        // Fonction pour vérifier si un créneau respecte la limite de 15km
+        async function isTimeSlotValid(date, time, clientCoords) {
+            const dateStr = date.toISOString().split('T')[0];
+            const dayAppointments = existingAppointments[dateStr] || {};
+            
+            // Vérifier tous les rendez-vous du même jour
+            for (let existingTime in dayAppointments) {
+                const existingCoords = dayAppointments[existingTime].coords;
+                const distance = await calculateRoadDistance(clientCoords, existingCoords);
+                
+                // Si la distance est > 15km, ce créneau n'est pas optimal
+                if (distance > 15) {
+                    return { valid: false, distance: distance, conflictTime: existingTime };
+                }
+            }
+            return { valid: true, distance: 0 };
+        }
+
+        function checkZone() {
+            const postalCode = document.getElementById('postalCode').value;
+            const city = document.getElementById('city').value;
+            const address = document.getElementById('address').value;
+
+            if (!postalCode || !city || !address || !clientCoords) {
+                alert('Veuillez sélectionner une adresse complète dans la liste d\'autocomplétion');
+                return;
+            }
+
+            const zoneResult = document.getElementById('zoneResult');
+            const zone = zones[postalCode];
+
+            if (zone && zone.available) {
+                selectedZone = zone;
+                zoneResult.innerHTML = `
+                    <div class="zone-info">
+                        <h4>✅ Zone couverte : ${zone.name}</h4>
+                        <p>Jours de passage : ${zone.days.join(', ')}</p>
+                        <p>Tarif : 80€ TTC</p>
+                        <p><small>📍 Optimisation des tournées dans un rayon de 15km (distance routière)</small></p>
+                    </div>
+                `;
+                setTimeout(() => {
+                    document.getElementById('step2').classList.remove('hidden');
+                    generateCalendar();
+                }, 500);
+            } else {
+                zoneResult.innerHTML = `
+                    <div class="zone-info not-covered">
+                        <h4>❌ Zone non couverte</h4>
+                        <p>Désolé, nous n'intervenons pas encore dans cette zone.</p>
+                        <p>Contactez-nous au 03 27 XX XX XX pour plus d'informations.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function generateCalendar() {
+            const calendar = document.getElementById('calendar');
+            const today = new Date();
+            const nextWeeks = [];
+
+            // Générer les 4 prochaines semaines
+            for (let week = 0; week < 4; week++) {
+                for (let day = 0; day < 7; day++) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() + (week * 7) + day);
+                    nextWeeks.push(date);
+                }
+            }
+
+            calendar.innerHTML = '<div class="calendar-grid">' + 
+                nextWeeks.map(date => {
+                    const dayName = date.toLocaleDateString('fr-FR', { weekday: 'long' });
+                    const isAvailable = selectedZone.days.includes(dayName) && date > today;
+                    const isPast = date <= today;
+                    
+                    return `
+                        <div class="day-slot ${isAvailable ? 'available' : 'unavailable'}" 
+                             onclick="${isAvailable ? `selectDate('${date.toISOString()}')` : ''}" 
+                             data-date="${date.toISOString()}">
+                            <div><strong>${dayName}</strong></div>
+                            <div>${date.getDate()}/${date.getMonth() + 1}</div>
+                            <div>${isAvailable ? 'Disponible' : isPast ? 'Passé' : 'Pas de passage'}</div>
+                        </div>
+                    `;
+                }).join('') + '</div>';
+        }
+
+        function selectDate(dateString) {
+            // Retirer la sélection précédente
+            document.querySelectorAll('.day-slot.selected').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            // Ajouter la sélection
+            document.querySelector(`[data-date="${dateString}"]`).classList.add('selected');
+            
+            selectedDate = new Date(dateString);
+            document.getElementById('step3').classList.remove('hidden');
+            generateTimeSlots();
+        }
+
+        async function generateTimeSlots() {
+            const timeSlots = document.getElementById('timeSlots');
+            const slots = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
+            
+            timeSlots.innerHTML = '<p>⏳ Vérification des créneaux optimaux...</p>';
+            
+            let availableSlots = [];
+            let restrictedSlots = [];
+            
+            // Vérifier chaque créneau de manière asynchrone
+            for (let time of slots) {
+                const validation = await isTimeSlotValid(selectedDate, time, clientCoords);
+                if (validation.valid) {
+                    availableSlots.push(time);
+                } else {
+                    restrictedSlots.push({
+                        time: time,
+                        distance: validation.distance,
+                        conflictTime: validation.conflictTime
+                    });
+                }
+            }
+            
+            // Afficher les créneaux avec itinéraire
+            const dateStr = selectedDate.toISOString().split('T')[0];
+            const dayAppointments = existingAppointments[dateStr] || {};
+            
+            if (Object.keys(dayAppointments).length > 0) {
+                showRoute(dayAppointments);
+            }
+            
+            timeSlots.innerHTML = `
+                <p>Créneaux disponibles pour le ${selectedDate.toLocaleDateString('fr-FR')} :</p>
+                ${availableSlots.length > 0 ? `
+                    <div class="time-slots">
+                        ${availableSlots.map(time => `
+                            <div class="time-slot" onclick="selectTime('${time}')" data-time="${time}">
+                                ${time}
+                                <div style="font-size: 10px; color: #4CAF50;">✓ Optimal</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+                
+                ${restrictedSlots.length > 0 ? `
+                    <div style="margin-top: 15px;">
+                        <p><small>⚠️ Créneaux avec frais supplémentaires :</small></p>
+                        <div class="time-slots">
+                            ${restrictedSlots.map(slot => `
+                                <div class="time-slot" style="background: #ffebee; border-color: #f44336; color: #666;" 
+                                     onclick="selectTimeWithWarning('${slot.time}', ${slot.distance.toFixed(1)})" data-time="${slot.time}">
+                                    ${slot.time}
+                                    <div style="font-size: 10px;">${slot.distance.toFixed(1)}km</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="distance-info warning">
+                            <p><strong>🗺️ Information importante :</strong></p>
+                            <p>Ces créneaux nécessitent des déplacements de plus de 15km par rapport aux autres clients du jour.</p>
+                            <p>Frais supplémentaires : 20€ TTC</p>
+                        </div>
+                    </div>
+                ` : ''}
+                
+                ${Object.keys(dayAppointments).length > 0 ? `
+                    <div class="distance-info">
+                        <h4>📍 Autres rendez-vous prévus ce jour :</h4>
+                        ${Object.entries(dayAppointments).map(([time, appointment]) => `
+                            <p><strong>${time}</strong> - ${appointment.client} (${appointment.address})</p>
+                        `).join('')}
+                    </div>
+                ` : ''}
+                
+                ${availableSlots.length === 0 && restrictedSlots.length === 0 ? `
+                    <div class="distance-info error">
+                        <p>❌ Aucun créneau disponible pour cette date.</p>
+                        <p>Veuillez choisir une autre date.</p>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function selectTimeWithWarning(time, distance) {
+            const confirmed = confirm(
+                `Ce créneau (${time}) nécessite un déplacement de ${distance}km par rapport aux autres clients du jour.\n\n` +
+                `Cela entraîne des frais supplémentaires de 20€.\n\n` +
+                `Voulez-vous continuer ?`
+            );
+            
+            if (confirmed) {
+                selectTime(time, true);
+            }
+        }
+
+        function selectTime(time, isNonOptimal = false) {
+            document.querySelectorAll('.time-slot.selected').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            document.querySelector(`[data-time="${time}"]`).classList.add('selected');
+            selectedTime = time;
+            
+            // Stocker l'info si c'est un créneau non optimal
+            selectedTime = { time: time, nonOptimal: isNonOptimal };
+            
+            setTimeout(() => {
+                document.getElementById('step4').classList.remove('hidden');
+            }, 300);
+        }
+
+        function showSummary() {
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const email = document.getElementById('clientEmail').value;
+            const chimney = document.getElementById('chimney').value;
+            
+            if (!name || !phone || !email || !chimney) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+
+            const summary = document.getElementById('summary');
+            const basePrice = 80;
+            const extraFee = selectedTime.nonOptimal ? 20 : 0;
+            const totalPrice = basePrice + extraFee;
+            
+            summary.innerHTML = `
+                <h4>Détails de votre rendez-vous :</h4>
+                <p><strong>📍 Zone :</strong> ${selectedZone.name}</p>
+                <p><strong>📅 Date :</strong> ${selectedDate.toLocaleDateString('fr-FR', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })}</p>
+                <p><strong>⏰ Heure :</strong> ${selectedTime.time}</p>
+                <p><strong>👤 Client :</strong> ${name}</p>
+                <p><strong>📞 Téléphone :</strong> ${phone}</p>
+                <p><strong>📧 Email :</strong> ${email}</p>
+                <p><strong>🏠 Type :</strong> ${chimney}</p>
+                <p><strong>💰 Tarif de base :</strong> ${basePrice}€ TTC</p>
+                ${extraFee > 0 ? `<p><strong>🚗 Frais de déplacement :</strong> ${extraFee}€ TTC</p>` : ''}
+                <p><strong>💳 Total :</strong> ${totalPrice}€ TTC</p>
+                ${selectedTime.nonOptimal ? `<p style="color: #ffa726; font-size: 14px;">⚠️ Frais supplémentaires dus à la distance avec les autres clients du jour</p>` : ''}
+            `;
+            
+            document.getElementById('step5').classList.remove('hidden');
+        }
+
+        function confirmBooking() {
+            // Ici vous pourriez envoyer les données à votre serveur
+            document.querySelector('.content').innerHTML = `
+                <div class="success">
+                    <h2>✅ Rendez-vous confirmé !</h2>
+                    <p>Merci ${document.getElementById('clientName').value} !</p>
+                    <p>Votre rendez-vous est confirmé pour le <strong>${selectedDate.toLocaleDateString('fr-FR')} à ${selectedTime.time}</strong></p>
+                    <p>Vous recevrez un SMS de confirmation et un rappel 24h avant.</p>
+                    <p><strong>Numéro de réservation : #RDV-${Date.now()}</strong></p>
+                    <br>
+                    <p>📞 Pour toute question : 03 27 XX XX XX</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

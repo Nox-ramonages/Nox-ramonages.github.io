@@ -1,0 +1,562 @@
+!DOCTYPE html
+html lang=fr
+head
+    meta charset=UTF-8
+    meta name=viewport content=width=device-width, initial-scale=1.0
+    titleNOX Ramonages - Ramonage et Entretien Poêles à Pellet - Moringhemtitle
+    style
+         {
+            margin 0;
+            padding 0;
+            box-sizing border-box;
+        }
+
+        body {
+            font-family 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height 1.6;
+            color #333;
+            background-color #f8f9fa;
+        }
+
+        .container {
+            max-width 1200px;
+            margin 0 auto;
+            padding 0 20px;
+        }
+
+         Header 
+        header {
+            background linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color white;
+            padding 1rem 0;
+            box-shadow 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display flex;
+            justify-content space-between;
+            align-items center;
+            flex-wrap wrap;
+        }
+
+        .logo {
+            display flex;
+            align-items center;
+            gap 1rem;
+        }
+
+        .logo img {
+            height 50px;
+            width auto;
+        }
+
+        .logo-text {
+            font-size 2rem;
+            font-weight bold;
+            color #e74c3c;
+        }
+
+        .contact-info {
+            display flex;
+            gap 2rem;
+            flex-wrap wrap;
+        }
+
+        .contact-item {
+            display flex;
+            align-items center;
+            gap 0.5rem;
+        }
+
+        .contact-item svg {
+            width 18px;
+            height 18px;
+        }
+
+         Navigation 
+        nav {
+            background #34495e;
+            padding 1rem 0;
+        }
+
+        nav ul {
+            list-style none;
+            display flex;
+            justify-content center;
+            flex-wrap wrap;
+            gap 2rem;
+        }
+
+        nav a {
+            color white;
+            text-decoration none;
+            padding 0.5rem 1rem;
+            border-radius 5px;
+            transition background 0.3s;
+        }
+
+        nav ahover {
+            background #e74c3c;
+        }
+
+         Hero Section 
+        .hero {
+            background linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('dataimagesvg+xml;utf8,svg xmlns=httpwww.w3.org2000svg viewBox=0 0 1200 600rect fill=%23d4691a width=1200 height=600path fill=%23e74c3c d=M0,400 C300,350 600,450 900,400 C1050,375 1125,387 1200,400 L1200,600 L0,600 Zsvg');
+            background-size cover;
+            background-position center;
+            color white;
+            text-align center;
+            padding 4rem 0;
+        }
+
+        .hero h1 {
+            font-size 3rem;
+            margin-bottom 1rem;
+            text-shadow 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size 1.3rem;
+            margin-bottom 2rem;
+            text-shadow 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .cta-button {
+            background #e74c3c;
+            color white;
+            padding 1rem 2rem;
+            border none;
+            border-radius 5px;
+            font-size 1.1rem;
+            cursor pointer;
+            transition background 0.3s;
+            text-decoration none;
+            display inline-block;
+        }
+
+        .cta-buttonhover {
+            background #c0392b;
+        }
+
+         Services Section 
+        .services {
+            padding 4rem 0;
+            background white;
+        }
+
+        .section-title {
+            text-align center;
+            font-size 2.5rem;
+            margin-bottom 3rem;
+            color #2c3e50;
+        }
+
+        .services-grid {
+            display grid;
+            grid-template-columns repeat(auto-fit, minmax(300px, 1fr));
+            gap 2rem;
+            margin-top 2rem;
+        }
+
+        .service-card {
+            background #f8f9fa;
+            padding 2rem;
+            border-radius 10px;
+            text-align center;
+            box-shadow 0 5px 15px rgba(0,0,0,0.1);
+            transition transform 0.3s;
+        }
+
+        .service-cardhover {
+            transform translateY(-5px);
+        }
+
+        .service-card h3 {
+            color #e74c3c;
+            font-size 1.5rem;
+            margin-bottom 1rem;
+        }
+
+        .price {
+            font-size 2rem;
+            font-weight bold;
+            color #2c3e50;
+            margin 1rem 0;
+        }
+
+         About Section 
+        .about {
+            padding 4rem 0;
+            background #f8f9fa;
+        }
+
+        .about-content {
+            display grid;
+            grid-template-columns 1fr 1fr;
+            gap 3rem;
+            align-items center;
+        }
+
+        .certifications {
+            background white;
+            padding 2rem;
+            border-radius 10px;
+            box-shadow 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cert-badge {
+            display inline-block;
+            background #e74c3c;
+            color white;
+            padding 0.5rem 1rem;
+            border-radius 20px;
+            margin 0.5rem;
+            font-size 0.9rem;
+        }
+
+         Contact Section 
+        .contact {
+            padding 4rem 0;
+            background white;
+        }
+
+        .contact-grid {
+            display grid;
+            grid-template-columns 1fr 1fr;
+            gap 3rem;
+            margin-top 2rem;
+        }
+
+        .contact-info-detailed {
+            background #f8f9fa;
+            padding 2rem;
+            border-radius 10px;
+        }
+
+        .contact-info-detailed h3 {
+            color #e74c3c;
+            margin-bottom 1rem;
+        }
+
+        .contact-item-detailed {
+            display flex;
+            align-items center;
+            gap 1rem;
+            margin-bottom 1rem;
+            padding 1rem;
+            background white;
+            border-radius 5px;
+        }
+
+        .hours-table {
+            width 100%;
+            border-collapse collapse;
+            margin-top 1rem;
+        }
+
+        .hours-table th,
+        .hours-table td {
+            text-align left;
+            padding 0.8rem;
+            border-bottom 1px solid #ddd;
+        }
+
+        .hours-table th {
+            background #e74c3c;
+            color white;
+        }
+
+         Footer 
+        footer {
+            background #2c3e50;
+            color white;
+            text-align center;
+            padding 2rem 0;
+        }
+
+         Responsive 
+        @media (max-width 768px) {
+            .hero h1 {
+                font-size 2rem;
+            }
+            
+            .hero p {
+                font-size 1.1rem;
+            }
+            
+            .about-content,
+            .contact-grid {
+                grid-template-columns 1fr;
+            }
+            
+            .header-content {
+                flex-direction column;
+                gap 1rem;
+            }
+            
+            .contact-info {
+                justify-content center;
+            }
+        }
+
+         Animations 
+        @keyframes fadeInUp {
+            from {
+                opacity 0;
+                transform translateY(30px);
+            }
+            to {
+                opacity 1;
+                transform translateY(0);
+            }
+        }
+
+        .service-card {
+            animation fadeInUp 0.6s ease-out;
+        }
+
+        .service-cardnth-child(2) {
+            animation-delay 0.2s;
+        }
+
+        .service-cardnth-child(3) {
+            animation-delay 0.4s;
+        }
+    style
+head
+body
+    header
+        div class=container
+            div class=header-content
+                div class=logo
+                    img src=dataimagesvg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImZsYW1lLWdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNmZmQ3MDA7c3RvcC1vcGFjaXR5OjEiIC8+CjxzdG9wIG9mZnNldD0iNTAlIiBzdHlsZT0ic3RvcC1jb2xvcjojZmY5NjAwO3N0b3Atb3BhY2l0eToxIiAvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNmZjIyMDA7c3RvcC1vcGFjaXR5OjEiIC8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPCEtLSBBcnJpw6hyZS1wbGFuIC0tPgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzNhNDA0NSIvPgo8IS0tIE5PWCBUZXh0IC0tPgo8dGV4dCB4PSIxMDAiIHk9IjM1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjNmE3Mzc3Ij4KPHRzcGFuPk48L3RzcGFuPgo8dHNwYW4+WDwvdHNwYW4+CjwvdGV4dD4KPCEtLSBDZXJjbGUgYXV0b3VyIGRlIE8gLS0+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjM1IiByPSIyNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmE3Mzc3IiBzdHJva2Utd2lkdGg9IjMiLz4KPCEtLSBDaGVtaW7DqWUgLS0+CjxyZWN0IHg9IjkyIiB5PSIzMCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE4IiBmaWxsPSIjOGQ0ZjJkIiBzdHJva2U9IiMzNzM3MzciIHN0cm9rZS13aWR0aD0iMSIvPgo8cmVjdCB4PSI5NCIgeT0iMzUiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iIzM3MzczNyIvPgo8IS0tIEZsYW1tZSAtLT4KPHBhdGggZD0iTTEwMCwzMCBDMTAyLDI1IDEwNSwyMCAxMDgsMTUgQzEwNywxMiAxMDUsMTAgMTAyLDEwIEMxMDEsMTEgMTAxLDEzIDEwMCwxNSBDOTksMTIgOTgsMTEgOTcsMTAgQzk1LDEwIDkzLDEyIDk0LDE1IEM5NywyMCA5OCwyNSAxMDAsMzAiIGZpbGw9InVybCgjZmxhbWUtZ3JhZGllbnQpIi8+CjxwYXRoIGQ9Ik0xMDEsNDAgQzEwMiwzNSAxMDQsMzIgMTA2LDMwIEMxMDUsyOCAxMDMsMjcgMTAyLDI3IEMxMDEsMjggMTAxLDI5IDEwMSwzMCBDMTAwLDI4IDEwMCwyOCA5OSwyNyBDOTgsMjcgOTYsMjggOTcsMzAgQzk5LDMyIDEwMCwzNSAxMDEsNDAiIGZpbGw9InVybCgjZmxhbWUtZ3JhZGllbnQpIi8+CjwhLS0gUkFNT05BR0VTIFRleHQgLS0+Cjx0ZXh0IHg9IjEwMCIgeT0iNzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2YTczNzciPlJBTU9OQUdFUzwvdGV4dD4KPC9zdmc+ alt=NOX Ramonages Logo 
+                    div class=logo-textNOX RAMONAGESdiv
+                div
+                div class=contact-info
+                    div class=contact-item
+                        svg fill=currentColor viewBox=0 0 24 24
+                            path d=M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z
+                        svg
+                        span09 56 71 22 45span
+                    div
+                    div class=contact-item
+                        svg fill=currentColor viewBox=0 0 24 24
+                            path d=M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z
+                        svg
+                        spanramonagenox@gmail.comspan
+                    div
+                    div class=contact-item
+                        svg fill=currentColor viewBox=0 0 24 24
+                            path d=M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z
+                        svg
+                        spanMoringhem & 30kmspan
+                    div
+                div
+            div
+        div
+    header
+
+    nav
+        div class=container
+            ul
+                lia href=#accueilAccueilali
+                lia href=#servicesServicesali
+                lia href=#tarifsTarifsali
+                lia href=#aproposÀ Proposali
+                lia href=#contactContactali
+            ul
+        div
+    nav
+
+    section id=accueil class=hero
+        div class=container
+            h1Ramonage Professionnelh1
+            pSpécialiste du ramonage et de l'entretien de poêles à pelletbr
+            Diplômé et certifié COSTIC - Intervention dans un rayon de 30km autour de Moringhemp
+            a href=tel0956712245 class=cta-buttonAppelez-nous maintenanta
+        div
+    section
+
+    section id=services class=services
+        div class=container
+            h2 class=section-titleNos Servicesh2
+            div class=services-grid
+                div class=service-card
+                    h3🔥 Ramonage Completh3
+                    pRamonage professionnel de tous types de conduits  cheminées, poêles à bois, inserts. Intervention rapide et efficace avec certificat de ramonage.p
+                    div class=price60€div
+                    pstrongObligatoire 1 à 2 fois par anstrongp
+                div
+                div class=service-card
+                    h3🔧 Entretien Poêles à Pelleth3
+                    pEntretien complet de votre poêle à pellet  nettoyage, vérification, réglages. Prolongez la durée de vie de votre équipement.p
+                    div class=price150€div
+                    pstrongDevenu obligatoire 1 fois par anstrongp
+                div
+            div
+        div
+    section
+
+    section id=apropos class=about
+        div class=container
+            h2 class=section-titleÀ Proposh2
+            div class=about-content
+                div
+                    h3NOX Ramonages, votre expert depuis 2021h3
+                    pEntreprise spécialisée dans le ramonage et l'entretien des systèmes de chauffage, nous intervenons dans un rayon de 30km autour de Moringhem avec professionnalisme et expertise.p
+                    pNotre mission est de garantir la sécurité et l'efficacité de vos installations de chauffage tout en respectant les normes en vigueur.p
+                    pstrongPourquoi nous choisir strongp
+                    ul
+                        li✅ Intervention rapide et ponctuelleli
+                        li✅ Tarifs transparents et compétitifsli
+                        li✅ Matériel professionnel de qualitéli
+                        li✅ Conseils personnalisésli
+                        li✅ Certificat de ramonage fournili
+                    ul
+                div
+                div class=certifications
+                    h3Certifications & Qualificationsh3
+                    div class=cert-badgeDiplômé COSTICdiv
+                    div class=cert-badgeCertifié Professionneldiv
+                    div class=cert-badgeDepuis 2021div
+                    p style=margin-top 1rem;
+                        Nos techniciens sont formés et certifiés pour intervenir sur tous types d'installations. Nous respectons toutes les normes de sécurité et délivrons les certificats obligatoires.
+                    p
+                div
+            div
+        div
+    section
+
+    section id=contact class=contact
+        div class=container
+            h2 class=section-titleContact & Horairesh2
+            div class=contact-grid
+                div class=contact-info-detailed
+                    h3Contactez-noush3
+                    div class=contact-item-detailed
+                        svg fill=currentColor viewBox=0 0 24 24 width=24 height=24
+                            path d=M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z
+                        svg
+                        div
+                            strongTéléphonestrongbr
+                            a href=tel0956712245 style=color #e74c3c;09 56 71 22 45a
+                        div
+                    div
+                    div class=contact-item-detailed
+                        svg fill=currentColor viewBox=0 0 24 24 width=24 height=24
+                            path d=M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z
+                        svg
+                        div
+                            strongEmailstrongbr
+                            a href=mailtoramonagenox@gmail.com style=color #e74c3c;ramonagenox@gmail.coma
+                        div
+                    div
+                    div class=contact-item-detailed
+                        svg fill=currentColor viewBox=0 0 24 24 width=24 height=24
+                            path d=M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z
+                        svg
+                        div
+                            strongZone d'interventionstrongbr
+                            Moringhem et dans un rayon de 30km
+                        div
+                    div
+                div
+                div
+                    h3Horaires d'interventionh3
+                    table class=hours-table
+                        thead
+                            tr
+                                thJourth
+                                thHorairesth
+                            tr
+                        thead
+                        tbody
+                            tr
+                                tdLunditd
+                                td8h - 12h  14h - 18htd
+                            tr
+                            tr
+                                tdMarditd
+                                td8h - 12h  14h - 18htd
+                            tr
+                            tr
+                                tdMercreditd
+                                td8h - 12h  14h - 18htd
+                            tr
+                            tr
+                                tdJeuditd
+                                td8h - 12h  14h - 18htd
+                            tr
+                            tr
+                                tdVendreditd
+                                td8h - 12h  14h - 18htd
+                            tr
+                            tr
+                                tdSameditd
+                                td8h - 12htd
+                            tr
+                            tr
+                                tdDimanchetd
+                                tdFermétd
+                            tr
+                        tbody
+                    table
+                div
+            div
+        div
+    section
+
+    footer
+        div class=container
+            p&copy; 2024 NOX Ramonages - Tous droits réservés  Diplômé et certifié COSTICp
+            pRamonage professionnel - Entretien poêles à pellet - Moringhem et alentoursp
+        div
+    footer
+
+    script
+         Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^=#]').forEach(anchor = {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior 'smooth',
+                        block 'start'
+                    });
+                }
+            });
+        });
+
+         Add active class to navigation on scroll
+        window.addEventListener('scroll', () = {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            sections.forEach(section = {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY = sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link = {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+         Phone number click tracking
+        document.querySelectorAll('a[href^=tel]').forEach(link = {
+            link.addEventListener('click', function() {
+                console.log('Appel téléphonique initié');
+            });
+        });
+    script
+body
+html
